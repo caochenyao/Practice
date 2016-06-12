@@ -28,7 +28,7 @@ void Test1()
 void Test2()
 {
 	//工作时长10毫秒
-	const INT64 busytime = 1000;
+	const INT64 busytime = 10;
 	//休息时长10毫秒
 	const INT64 relaxtime = 10;
 
