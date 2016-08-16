@@ -118,8 +118,85 @@ long long Fibonacci(unsigned int n)
 	}
 	return fib;
 }
+
+//5.找出旋转数组中的最小数
+int InOrderMin(int* array,int begin,int end)
+{
+	int result = array[begin];
+	for (int i = begin; i <= end; i++)
+	{
+		if (result > array[i])
+			result = array[i];
+	}
+	return result;
+}
+int FindMin(int* array,int len)
+{
+	if (array == NULL || len <= 0)
+		return -1;
+
+	int begin = 0;
+	int end = len - 1;
+	int mid = 0;
+	while (array[begin] >= array[end])
+	{
+		if (end - begin == 1)
+		{
+			mid = end;
+			break;
+		}
+
+		mid = begin + (end - begin) / 2;
+		//如果下标为begin，end，mid的三个数字相等，用顺序查找
+		if (array[begin] == array[mid] && array[mid] == array[end])
+			return InOrderMin(array,begin,end);
+
+		if (array[mid] >= array[begin])
+			begin = mid;
+		else if (array[mid] <= array[end])
+			end = mid;
+	}
+	return array[mid];
+}
+
+//6.数值的整数次方
+double PowerExponent(double base, unsigned int exponent)
+{
+	if (exponent == 0)
+		return 1;
+	if (exponent == 1)
+		return base;
+
+	double result = PowerExponent(base, exponent>>1);
+	result *= result;
+	if ((exponent & 0x1) == 1)
+		result *= base;
+
+	return result;
+}
+bool equel(double num1,double num2)
+{
+	if ((num1 - num2 > -0.0000001) && (num1 - num2 < 0.0000001))
+		return true;
+	else
+		return false;
+}
+double Power(double base,int exponent)
+{
+	if (equel(base, 0.0) && exponent < 0)
+		return 0.0;
+
+	unsigned int absexponent = (unsigned int)exponent;
+	if(exponent < 0)
+		absexponent = (unsigned int)(-exponent);
+
+	double result = PowerExponent(base, absexponent);
+	if(exponent < 0)
+		result = 1.0/result;
+
+	return result;
+}
 #endif
-//
 
 void InterviewTest()
 {
@@ -138,5 +215,13 @@ void InterviewTest()
 	ReplaceBlank(str,20);
 
 	cout << Fibonacci(3) << endl;
+
+	//5.
+	int array[5] = {1,0,1,1,1};
+	cout << FindMin(array, 5) << endl;
+
+	//6.
+	cout << Power(2,4) << endl;
 #endif
+
 }
