@@ -36,6 +36,7 @@ void Delete(Node** head)
 		Node* del = node;
 		node = node->_next;
 		delete del;
+		del = NULL;
 	}
 }
 #if 0
@@ -73,7 +74,43 @@ void TailToHeadPrint2(Node* head)
 		cout << head->_data << "->";
 	}	
 }
+
+//O(1)删除一个节点
+void DeleteNode(Node** pHead,Node* DelNode)
+{
+	if (pHead && DelNode)
+		return;
+
+	if (DelNode->_next)
+	{
+		Node* next = DelNode->_next;
+		DelNode->_next = next->_next;
+		DelNode->_data = next->_data;
+
+		delete next;
+		next = NULL;
+	}
+	else if (*pHead == DelNode)
+	{
+		delete DelNode;
+
+		DelNode = *pHead = NULL;
+	}
+	else
+	{
+		Node* node = *pHead;
+		while (node->_next != DelNode)
+		{
+			node = node->_next;
+		}
+
+		node->_next = NULL;
+		delete DelNode;
+		DelNode = NULL;
+	}
+}
 #endif
+
 void SeqListTest()
 {
 	Node* node = NULL;
