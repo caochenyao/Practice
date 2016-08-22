@@ -109,22 +109,100 @@ void DeleteNode(Node** pHead,Node* DelNode)
 		DelNode = NULL;
 	}
 }
+
+//找到倒数第k个节点
+Node* FindKthToTail(Node* pHead,int k)
+{
+	if (pHead == NULL || k <= 0)
+		return NULL;
+
+	Node* firstNode = pHead;
+	Node* secondNode = NULL;
+	for (int i = 0; i < k - 1; ++i)
+	{
+		if (firstNode->_next == NULL)
+			return NULL;
+		firstNode = firstNode->_next;
+	}
+
+	secondNode = pHead;
+	while (firstNode->_next)
+	{
+		firstNode = firstNode->_next;
+		secondNode = secondNode->_next;
+	}
+	return secondNode;
+}
+
+//链表的逆置
+Node* ReverseList(Node* pHead)
+{
+	Node* prehead = NULL;
+	Node* node = pHead;
+	Node* prev = NULL;
+
+	while (node)
+	{
+		Node* next = node->_next;
+		if (next == NULL)
+			prehead = node;
+
+		node->_next = prev;
+		prev = node;
+		node = next;
+	}
+	return prehead;
+}
 #endif
+//合并两个排序链表
+Node* Merge(Node* pHead1,Node* pHead2)
+{
+	if (pHead1 == NULL)
+		return pHead2;
+	if (pHead2 == NULL)
+		return pHead1;
+
+	Node* pnewNode = NULL;
+	if (pHead1->_data < pHead2->_data)
+	{
+		pnewNode = pHead1;
+		pnewNode->_next = Merge(pHead1->_next,pHead2);
+	}
+	if (pHead2->_data < pHead1->_data)
+	{
+		pnewNode = pHead2;
+		pnewNode->_next = Merge(pHead2->_next, pHead1);
+	}
+
+	return pnewNode;
+}
 
 void SeqListTest()
 {
 	Node* node = NULL;
+	Node* node1 = NULL;
 
 	Insert(&node, 1);
-	Insert(&node, 2);
 	Insert(&node, 3);
-	Insert(&node, 4);
 	Insert(&node, 5);
+	Insert(&node, 7);
+	Insert(&node, 9);
+
+	Insert(&node1, 2);
+	Insert(&node1, 4);
+	Insert(&node1, 6);
+	Insert(&node1, 8);
+	Insert(&node1, 10);
 
 #if 0
 	TailToHeadPrint1(node);
 	TailToHeadPrint2(node);
+
+	Node* pnode = FindKthToTail(node,5);
+
+	Node* renode = ReverseList(node);
 #endif
+	Node* mergenode = Merge(node,node1);
 
 	Delete(&node);
 }
