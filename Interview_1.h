@@ -196,7 +196,7 @@ double Power(double base,int exponent)
 
 	return result;
 }
-#endif
+
 //7.打印1到最大的n位数
 bool IsCrement(char* number)
 {
@@ -258,6 +258,28 @@ void PrintOneToMax(int n)
 
 }
 
+//8.调整数组顺序使奇数位于偶数前面
+void ReOrderArray(int* array, int len)
+{
+	int* begin = array;
+	int* end = array + len - 1;
+
+	while (begin < end)
+	{
+		while (begin < end && (*begin & 0x1) != 0)
+			begin++;
+		while (begin < end && (*end & 0x1) == 0)
+			end--;
+		if (begin < end)
+		{
+			int tmp = *begin;
+			*begin = *end;
+			*end = tmp;
+		}
+	}
+}
+#endif
+
 void InterviewTest()
 {
 #if 0
@@ -285,6 +307,10 @@ void InterviewTest()
 
 	//7.
 	PrintOneToMax(2);
+
+	int array[10] = {1,2,3,4,5,6,7,8,9,10};
+	ReOrderArray(array,10);
 #endif
+
 
 }
