@@ -197,6 +197,66 @@ double Power(double base,int exponent)
 	return result;
 }
 #endif
+//7.打印1到最大的n位数
+bool IsCrement(char* number)
+{
+	bool iscrement = false;
+	int len = strlen(number);
+
+	for (int i = len - 1; i >= 0; --i)
+	{
+		int snum = number[i] - '0' + 1;
+
+		if (snum >= 10)
+		{
+			if (i == 0)
+				iscrement = true;
+			else
+			{
+				snum -= 10;
+				number[i] = snum + '0';
+			}
+		}
+		else
+		{
+			number[i] = snum + '0';
+			break;
+		}
+	}
+	return iscrement;
+}
+
+void PrintNumber(const char* number)
+{
+	int len = strlen(number);
+	bool isbegin0 = true;
+
+	for (int i = 0; i < len;++i)
+	{
+		if (isbegin0 && number[i] != '0')
+			isbegin0 = false;
+		if (!isbegin0)
+		{
+			printf("%c",number[i]);
+		}
+	}
+	printf("\n");
+}
+
+void PrintOneToMax(int n)
+{
+	if (n <= 0)
+		return;
+	char* number = new char[n + 1];
+	memset(number,'0',n);
+	number[n] = '\0';
+
+	while (!IsCrement(number))
+	{
+		PrintNumber(number);
+	}
+
+}
 
 void InterviewTest()
 {
@@ -222,6 +282,9 @@ void InterviewTest()
 
 	//6.
 	cout << Power(2,4) << endl;
+
+	//7.
+	PrintOneToMax(2);
 #endif
 
 }
