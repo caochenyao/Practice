@@ -153,7 +153,7 @@ Node* ReverseList(Node* pHead)
 	}
 	return prehead;
 }
-#endif
+
 //合并两个排序链表
 Node* Merge(Node* pHead1,Node* pHead2)
 {
@@ -176,6 +176,8 @@ Node* Merge(Node* pHead1,Node* pHead2)
 
 	return pnewNode;
 }
+#endif
+
 
 void SeqListTest()
 {
@@ -187,22 +189,24 @@ void SeqListTest()
 	Insert(&node, 5);
 	Insert(&node, 7);
 	Insert(&node, 9);
-
+#if 0
 	Insert(&node1, 2);
 	Insert(&node1, 4);
 	Insert(&node1, 6);
 	Insert(&node1, 8);
 	Insert(&node1, 10);
 
-#if 0
+
 	TailToHeadPrint1(node);
 	TailToHeadPrint2(node);
 
 	Node* pnode = FindKthToTail(node,5);
 
 	Node* renode = ReverseList(node);
-#endif
+
 	Node* mergenode = Merge(node,node1);
+#endif
+
 
 	Delete(&node);
 }
