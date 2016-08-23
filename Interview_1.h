@@ -1,4 +1,7 @@
 #pragma once
+#include<stack>
+#include<assert.h>
+
 #if 0
 //1.实现单例模式
 //不考虑线程安全
@@ -278,7 +281,89 @@ void ReOrderArray(int* array, int len)
 		}
 	}
 }
+
+//9.顺时针打印矩阵
+void PrintMatrixOnlyOneCircle(int* array, int cols, int rows, int start)
+{
+	int endx = cols - 1 - start;
+	int endy = rows - 1 - start;
+
+	//从左到右打印
+	for (int i = start; i <= endx;++i)
+	{
+		printf("%d ",array[start*cols+i]);
+	}
+	//从上到下打印
+	if (start < endy)
+	{
+		for (int i = start + 1; i <= endy; ++i)
+		{
+			printf("%d ", array[(i+1)*cols-1-start]);
+		}
+	}
+	//从右向左打印
+	if (start < endx && start < endy)
+	{
+		for (int i = endx - 1; i >= start; --i)
+		{
+			printf("%d ",array[endy*cols+i]);
+		}
+	}
+	//从下向上打印
+	if (start < endx && start < endy-1)
+	{
+		for (int i = endy - 1; i > start; --i)
+		{
+			printf("%d ",array[i*cols+start]);
+		}
+	}
+}
+void PrintMatrix(int* array,int cols,int rows)
+{
+	if (array == NULL || cols <= 0 || rows <= 0)
+		return;
+	int start = 0;
+	while(cols > start*2 && rows > start*2)
+	{
+		PrintMatrixOnlyOneCircle(array, cols, rows, start);
+		start++;
+	}
+}
+
+//10.包含min函数的栈
+template<class T>
+class StackWithMin
+{
+public:
+	void Push(const T data)
+	{
+		m_data.push(data);
+
+		if (m_min.size() == 0 || data < m_data.pop())
+			m_min.push(data);
+		else
+			m_min.push(m_data.top());
+	}
+	void Pop()
+	{
+		assert(m_data.size() > 0 && m_min.size() > 0);
+
+		m_data.pop();
+		m_min.pop();
+	}
+	T& Min()
+	{
+		assert(m_min.size() > 0);
+
+		return m_min.top();
+	}
+private:
+	stack<T> m_data;
+	stack<T> m_min;
+};
 #endif
+//11.栈的压入、弹出序列
+
 
 void InterviewTest()
 {
@@ -308,8 +393,18 @@ void InterviewTest()
 	//7.
 	PrintOneToMax(2);
 
+	//8.
 	int array[10] = {1,2,3,4,5,6,7,8,9,10};
 	ReOrderArray(array,10);
+
+	//9.
+	int array[4][4] = { 
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 16}
+	};
+	PrintMatrix(*array,4,4);
 #endif
 
 
