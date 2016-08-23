@@ -363,7 +363,38 @@ private:
 };
 #endif
 //11.栈的压入、弹出序列
+bool IsPopOrder(int* push,int* pop,int len)
+{
+	bool ispoporder = false;
+	if (push && pop && len >= 0)
+	{
+		int* popnext = pop;
+		int* pushnext = push;
 
+		stack<int> stack;
+		while (popnext - pop < len)
+		{
+			while (stack.empty() || stack.top() != *popnext)
+			{
+				if (pushnext - pop == len)
+					break;
+
+				stack.push(*pushnext);
+				pushnext++;
+			}
+
+			if (stack.top() != *popnext)
+				break;
+
+			stack.pop();
+			popnext++;
+		}
+
+		if (stack.empty() && popnext - pop == len)
+			ispoporder = true;
+	}
+	return ispoporder;
+}
 
 void InterviewTest()
 {
