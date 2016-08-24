@@ -84,7 +84,7 @@ void ReplaceBlank(char* str,int len)
 	}
 	//计算新字符串的长度
 	newlen = originlen + blanknum * 2;
-	if (newlen > len)
+	if (newlen <= len)
 		return;
 	//替换空格
 	while (newlen>0 && newlen>originlen)
@@ -361,7 +361,7 @@ private:
 	stack<T> m_data;
 	stack<T> m_min;
 };
-#endif
+
 //11.栈的压入、弹出序列
 bool IsPopOrder(int* push,int* pop,int len)
 {
@@ -395,6 +395,8 @@ bool IsPopOrder(int* push,int* pop,int len)
 	}
 	return ispoporder;
 }
+#endif
+
 
 void InterviewTest()
 {
