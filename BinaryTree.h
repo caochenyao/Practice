@@ -1,5 +1,6 @@
 #pragma once
 #include<queue>
+#include<vector>
 
 struct TreeNode
 {
@@ -147,6 +148,42 @@ bool IsOrderFromBack(int* sequeue, int len)
 	return (left && right);
 }
 #endif
+//二叉树中和为某一值的的路径
+void FindPath_Add(TreeNode* root, int expentSum, vector<int>& path, int curSum)
+{
+	curSum += root->_data;
+	path.push_back(root->_data);
+
+	//如果到达叶子节点且路径上的节点值相加等于该值打印这条路径
+	if (curSum == expentSum && root->_left == NULL && root->_right == NULL)
+	{
+		vector<int>::iterator it = path.begin();
+		while (it != path.end())
+		{
+			printf("%d\t",*it);
+			it++;
+		}
+		cout << endl;
+	}
+
+	if (root->_left)
+		FindPath_Add(root->_left, expentSum, path, curSum);
+	if (root->_right)
+		FindPath_Add(root->_right, expentSum, path, curSum);
+
+	//向上一层返回时从路径上删除当前节点
+	path.pop_back();
+
+}
+void FindPath(TreeNode* root, int expentSum)
+{
+	if (root == NULL)
+		return;
+
+	int curSum = 0;
+	vector<int> path;
+	FindPath_Add(root, expentSum, path, curSum);
+}
 
 
 void BinaryTreeTest()
