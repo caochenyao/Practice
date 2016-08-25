@@ -147,7 +147,7 @@ bool IsOrderFromBack(int* sequeue, int len)
 
 	return (left && right);
 }
-#endif
+
 //二叉树中和为某一值的的路径
 void FindPath_Add(TreeNode* root, int expentSum, vector<int>& path, int curSum)
 {
@@ -183,6 +183,40 @@ void FindPath(TreeNode* root, int expentSum)
 	int curSum = 0;
 	vector<int> path;
 	FindPath_Add(root, expentSum, path, curSum);
+}
+#endif
+//二叉树的深度
+int TreeDepth(TreeNode* root)
+{
+	if (root == NULL)
+		return 0;
+
+	int left = TreeDepth(root->_left);
+	int right = TreeDepth(root->_right);
+
+	return left > right ? left : right;
+}
+//二叉搜索树是否平衡
+bool IsBalance(TreeNode* root, int* depth)
+{
+	if (root == NULL)
+	{
+		*depth = 0;
+		return true;
+	}
+
+	int left, right;
+	if (IsBalance(root->_left, &left) && IsBalance(root->_right, &right))
+	{
+		int diff = left - right;
+		if (diff >= -1 && diff <= 1)
+		{
+			*depth = 1 + (left > right ? left : right);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
