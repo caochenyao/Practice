@@ -687,7 +687,7 @@ int NumberTime(int* number, int len, int k)
 
 	return count;
 }
-#endif
+
 //21.数组中只出现一次的数字
 //22.和为s的两个数字
 bool FindNumberWithSum(int* number, int len, int data, int* num1, int* num2)
@@ -750,6 +750,83 @@ void FindAddEquelS(int sum)
 		count += bignum;
 	}
 }
+
+//23.翻转单词顺序
+void Reverse(char* begin, char* end)
+{
+	if (begin == NULL || end == NULL)
+		return;
+
+	while (begin < end)
+	{
+		char tmp = *begin;
+		*begin = *end;
+		*end = tmp;
+
+		begin++;
+		end--;
+	}
+}
+char* ReverseSentence(char* sentence)
+{
+	if (sentence == NULL)
+		return NULL;
+
+	char* begin = sentence;
+	char* end = sentence;
+	while (*end != '\0')
+		end++;
+	end--;
+
+	Reverse(begin, end);
+
+	begin = end = sentence;
+	while(*begin != '\0')
+	{
+		if (*begin == ' ')
+		{
+			begin++;
+			end++;
+		}
+		else if (*end == ' ' || *end == '\0')
+		{
+			Reverse(begin, --end);
+			begin = end++;
+		}
+		else
+		{
+			end++;
+		}
+	}
+
+	return sentence;
+}
+
+//字符串的左旋转操作
+char* ReverseString(char* string, int n)
+{
+	if (string == NULL)
+		return NULL;
+
+	int len = static_cast<int>(strlen(string));
+	if (len > 0 && n > 0 && n < len)
+	{
+		char* firstbegin = string;
+		char* firstend = string + n - 1;
+		char* secondbegin = string + n;
+		char* secondend = string + len - 1;
+
+		//翻转前n个字符
+		Reverse(firstbegin, firstend);
+		//翻转后面的字符
+		Reverse(secondbegin, secondend);
+		//整体进行翻转
+		Reverse(firstbegin, secondend);
+	}
+	return string;
+}
+#endif
+//24.
 
 
 void InterviewTest()
@@ -822,9 +899,17 @@ void InterviewTest()
 	//20.
 	int number[] = { 1, 2, 3, 4, 5, 5, 6, 7, 8 };
 	cout << NumberTime(number, sizeof(number)/sizeof(int), 5) << endl;
-#endif
+
 	//22.
 	FindAddEquelS(15);
+
+	//23.
+	char* sentence = "I am a student!";
+	cout << sentence << endl;
+	sentence = ReverseSentence(sentence);
+	cout << sentence << endl;
+#endif
+
 
 
 }
