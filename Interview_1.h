@@ -1,6 +1,9 @@
 #pragma once
 #include<stack>
 #include<assert.h>
+#include<math.h>
+#include<list>
+#include<vector>
 
 #if 0
 //1.实现单例模式
@@ -825,8 +828,263 @@ char* ReverseString(char* string, int n)
 	}
 	return string;
 }
+
+//24.n个骰子的点数
+const int value = 6;
+
+void PrintProbability(int number)
+{
+	if (number < 1)
+		return;
+
+	int* probabilities[2];
+	probabilities[0] = new int[number*value + 1];
+	probabilities[1] = new int[number*value + 1];
+
+	for (int i = 0; i < value*number + 1;++i)
+	{
+		probabilities[0][i] = 0;
+		probabilities[1][i] = 0;
+	}
+
+	for (int i = 0; i < value; ++i)
+		probabilities[0][i] = 1;
+
+	int flag = 0;
+	for (int k = 2; k < value*number + 1;++k)
+	{
+		for (int i = 0; i < k; ++i)
+			probabilities[1 - flag][i] = 0;
+
+		for (int i = k; i < value*k; ++i)
+		{
+			probabilities[1 - flag][i] = 0;
+			for (int j = 0; j <= i&&j <= value; ++j)
+				probabilities[1-flag][i] += probabilities[flag][i-j];
+		}
+
+		flag = 1 - flag;
+	}
+
+	double total = pow((double)value, number);
+	for (int i = number; i < value * number + 1; ++i)
+	{
+		double ratio = (double)probabilities[flag][i] / total;
+		printf("%d:%e\n",i,ratio);
+	}
+
+	delete[] probabilities[0];
+	delete[] probabilities[1];
+}
+
+//25.扑克牌顺子
+int compare(const void* num1, const void* num2)
+{
+	return *(int*)num1 - *(int*)num2;
+}
+bool IsContinue(int* number, int len)
+{
+	if (number == NULL && len <= 0)
+		return false;
+
+	qsort(number, len, sizeof(int), compare);
+
+	int ZeroNum = 0;
+	int GapNum = 0;
+	for (int i = 0; i < len;++i)
+	{
+		if (number[i] == 0)
+			ZeroNum++;
+	}
+
+	if (ZeroNum > 2)
+		return false;
+
+	int pre = ZeroNum;
+	int cur = pre + 1;
+	for (int i = ZeroNum; i < len; ++i)
+	{
+		GapNum += number[cur] - number[pre] - 1;
+		pre = cur;
+		cur++;
+	}
+
+	return GapNum>ZeroNum ? false : true;
+
+}
+
+//26.圆圈中最后剩下的数字
+int LastRemaining(int n, int m)
+{
+	if (n < 1 || m < 1)
+		return -1;
+
+	list<int> number;
+	for (int i = 0; i < n;++i)
+		number.push_back(i);
+	list<int>::iterator cur = number.begin();
+
+	while (number.size() > 1)
+	{
+		for (int i = 0; i < m; ++i)
+		{
+			cur++;
+			if (cur == number.end())
+				cur == number.begin();
+		}
+
+		list<int>::iterator next = cur++;
+		if (next == number.end())
+			next = number.begin();
+
+		cur--;
+		number.erase(cur);
+		cur = next;
+	}
+
+	return *cur;
+}
+
+//27.求1+2+3+...+n
+//28.不用加减乘除做加法
+int Add(int num1, int num2)
+{
+	int sum, carry;
+	do
+	{
+		sum = num1 ^ num2;
+		carry = (num1&num2) << 1;
+
+		num1 = sum;
+		num2 = carry;
+	} 
+	while (num2);
+
+	return num1; 
+}
+//29.不能被继承的类
+//想法一:单例
+//想法二:虚拟继承
+//30.字符串转换成整数
+enum Status
+{
+	VALID,
+	INVALID
+};
+int g_valid = VALID;
+
+long long StrToIntCore(const char* str, bool minus)
+{
+	long long num = 0;
+	while (*str != '\0')
+	{
+		if (*str > '0' && *str < '9')
+		{
+			int flag = minus ? -1 : 1;
+			num = num * 10 + flag*(*str);
+
+			if ((!minus && num>0x7fffffff) || (minus && num < (signed int)0x80000000))
+			{
+				num = 0;
+				break;
+			}
+
+			str++;
+		}
+		else
+		{
+			num = 0;
+			break;
+		}
+	}
+
+	if (*str == '\0')
+	{
+		g_valid = VALID;
+	}
+	return num;
+}
+
+int StrToInt(const char* str)
+{
+	g_valid = INVALID;
+	long long num = 0;
+
+	if (str && *str != '\0')
+	{
+		bool minus = false;
+		if (*str == '+')
+			str++;
+		if (*str == '-')
+		{
+			str++;
+			minus = true;
+		}
+
+		if (*str != '\0')
+		{
+			num = StrToIntCore(str, minus);
+		}
+	}
+
+	return (int)num;
+}
+
+//31.寻找最近的公共祖先
+//32.数组中重复的数
+bool FindAnyoneSameNumber(int* number, int len, int* result)
+{
+	if (number == NULL || len < 0)
+		return false;
+	for (int i = 0; i < len; ++i)
+	{
+		if (number[i] < 0 || number[i] > len - 1)
+			return false;
+	}
+
+	for (int i = 0; i < len; ++i)
+	{
+		while (number[i] != i)
+		{
+			if (number[i] == number[number[i]])
+			{
+				*result = number[i];
+				return true;
+			}
+			int tmp = number[i];
+			number[i] = number[tmp];
+			number[tmp] = tmp;
+		}
+	}
+
+	return false;
+}
+
+//33.构建乘积数组
+void Multip(vector<int>& array1, vector<int>& array2)
+{
+	int len1 = array1.size();
+	int len2 = array2.size();
+
+	if (len1 == len2 && len2 > 1)
+	{
+		array2[0] = 1;
+		for (int i = 1; i < len2;++i)
+		{
+			array2[i] = array2[i - 1] * array1[i - 1];
+		}
+
+		int tmp = 1;
+		for (int i = len2 - 2; i >= 0; --i)
+		{
+			tmp *= array1[i + 1];
+			array2[i] *= tmp;
+		}
+	}
+}
 #endif
-//24.
+//34.正则表达式
+
 
 
 void InterviewTest()
@@ -908,8 +1166,20 @@ void InterviewTest()
 	cout << sentence << endl;
 	sentence = ReverseSentence(sentence);
 	cout << sentence << endl;
-#endif
 
+	//24.
+	PrintProbability(2);
+
+	//25.
+	int number[] = {0,1,3,5,4};
+	cout << IsContinue(number, sizeof(number)/sizeof(int)) << endl;
+
+	//32.
+	int number[] = {0,1,3,2,2,3};
+	int result = 0;
+	cout << FindAnyoneSameNumber(number, sizeof(number)/sizeof(int), &result) << endl;
+	cout << result << endl;
+#endif
 
 
 }
